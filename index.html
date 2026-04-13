@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eloria Boutique & Jewels — Management Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CC7A;
+    --gold-pale: #F5EDD4;
+    --deep: #1A1209;
+    --ink: #2C2010;
+    --bark: #4A3520;
+    --sand: #8B7355;
+    --cream: #FAF6EE;
+    --white: #FFFDF8;
+    --rose: #C4726A;
+    --teal: #2E7D72;
+    --shadow: rgba(26,18,9,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  /* ── LOGIN SCREEN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--deep);
+    position: relative;
+    overflow: hidden;
+  }
+  #login-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .login-ornament {
+    position: absolute;
+    font-size: 18rem;
+    color: rgba(201,168,76,0.04);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    top: -3rem;
+    right: -2rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .login-box {
+    position: relative;
+    z-index: 1;
+    width: 420px;
+    padding: 3rem 3rem 3.5rem;
+    background: rgba(255,253,248,0.04);
+    border: 1px solid rgba(201,168,76,0.25);
+    backdrop-filter: blur(12px);
+    animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .login-logo .brand-e {
+    display: inline-block;
+    width: 56px; height: 56px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    line-height: 52px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+  .login-logo h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+  }
+  .login-logo p {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--sand);
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+  .login-label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.5rem;
+  }
+  .login-input {
+    width: 100%;
+    background: rgba(255,253,248,0.07);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    margin-bottom: 1.25rem;
+  }
+  .login-input:focus { border-color: var(--gold); }
+  .login-input::placeholder { color: rgba(201,168,76,0.3); }
+  .login-btn {
+    width: 100%;
+    background: var(--gold);
+    color: var(--deep);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.15s;
+    margin-top: 0.5rem;
+  }
+  .login-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .login-error {
+    color: #e07070;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 1rem;
+    display: none;
+  }
+  .demo-users {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding-top: 1.5rem;
+  }
+  .demo-users p {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .demo-chip {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .demo-chip:hover { background: rgba(201,168,76,0.15); }
+  .demo-chip .dc-name { font-size: 0.75rem; color: var(--gold-light); font-weight: 500; }
+  .demo-chip .dc-role { font-size: 0.6rem; color: var(--sand); letter-spacing: 0.1em; }
+
+  /* ── APP SHELL ── */
+  #app { display: none; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: var(--deep);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    border-right: 1px solid rgba(201,168,76,0.12);
+  }
+  .sidebar-logo {
+    padding: 2rem 1.75rem 1.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .sidebar-logo .s-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+  }
+  .sidebar-logo .s-sub {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-top: 0.1rem;
+  }
+  .sidebar-user {
+    padding: 1rem 1.75rem;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+  }
+  .sidebar-user .su-name { font-size: 0.8rem; color: var(--gold-pale); font-weight: 500; }
+  .sidebar-user .su-role {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-top: 0.15rem;
+  }
+  .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+  .nav-section {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(139,115,85,0.6);
+    padding: 0.75rem 1.75rem 0.4rem;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1.75rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-size: 0.82rem;
+    color: var(--sand);
+    position: relative;
+  }
+  .nav-item:hover { background: rgba(201,168,76,0.06); color: var(--gold-pale); }
+  .nav-item.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20%; bottom: 20%;
+    width: 2px;
+    background: var(--gold);
+  }
+  .nav-icon { width: 16px; text-align: center; font-size: 0.9rem; opacity: 0.8; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--deep);
+    font-size: 0.55rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 99px;
+  }
+  .sidebar-footer {
+    padding: 1rem 1.75rem;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+  .logout-btn {
+    font-size: 0.7rem;
+    color: var(--sand);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    font-family: 'Jost', sans-serif;
+    padding: 0;
+  }
+  .logout-btn:hover { color: var(--rose); }
+
+  /* MAIN CONTENT */
+  .main { margin-left: 240px; min-height: 100vh; }
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .topbar-actions { display: flex; gap: 0.75rem; }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--deep);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--bark);
+    border: 1px solid rgba(74,53,32,0.3);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-danger {
+    background: transparent;
+    color: var(--rose);
+    border: 1px solid rgba(196,114,106,0.3);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: rgba(196,114,106,0.08); }
+
+  .page { display: none; padding: 2.5rem; animation: pageIn 0.4s ease both; }
+  .page.active { display: block; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DASHBOARD ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .stat-card:hover::after { transform: scaleX(1); }
+  .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.6rem;
+  }
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-sub { font-size: 0.72rem; color: var(--sand); margin-top: 0.4rem; }
+  .stat-icon {
+    position: absolute;
+    right: 1.25rem; top: 1.25rem;
+    font-size: 1.5rem;
+    opacity: 0.15;
+  }
+
+  .dash-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.25rem; }
+  .card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.75rem;
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title .ct-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    font-weight: 500;
+    background: var(--white);
+    position: sticky;
+    top: 0;
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(201,168,76,0.07);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: rgba(245,237,212,0.4); }
+  tbody td { padding: 0.85rem 1rem; font-size: 0.82rem; color: var(--ink); vertical-align: middle; }
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .badge-gold { background: rgba(201,168,76,0.15); color: #8B6914; }
+  .badge-green { background: rgba(46,125,114,0.12); color: var(--teal); }
+  .badge-rose  { background: rgba(196,114,106,0.12); color: var(--rose); }
+  .badge-grey  { background: rgba(74,53,32,0.08); color: var(--bark); }
+  .badge-blue  { background: rgba(60,100,180,0.1); color: #3C64B4; }
+
+  /* ── FORM / MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,9,0.7);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeUp 0.3s ease both;
+    position: relative;
+  }
+  .modal-header {
+    padding: 1.75rem 2rem 1.25rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--sand);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--rose); }
+  .modal-body { padding: 1.75rem 2rem; }
+  .modal-footer {
+    padding: 1.25rem 2rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sand);
+    font-weight: 500;
+  }
+  .form-control {
+    border: 1px solid rgba(201,168,76,0.25);
+    background: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--ink);
+    padding: 0.65rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-control:focus { border-color: var(--gold); background: var(--white); }
+  select.form-control { cursor: pointer; }
+
+  /* ── FILTERS BAR ── */
+  .filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-input {
+    border: 1px solid rgba(201,168,76,0.2);
+    background: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--ink);
+    padding: 0.55rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 200px;
+  }
+  .filter-input:focus { border-color: var(--gold); }
+  .filter-select {
+    border: 1px solid rgba(201,168,76,0.2);
+    background: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    padding: 0.55rem 0.9rem;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* ── LOW STOCK ALERT ── */
+  .alert-banner {
+    background: rgba(196,114,106,0.08);
+    border: 1px solid rgba(196,114,106,0.25);
+    border-left: 3px solid var(--rose);
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--rose);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* ── CONSIGNMENT PAGE ── */
+  .consign-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  .cs-card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--gold);
+  }
+  .cs-card.teal { border-left-color: var(--teal); }
+  .cs-card.rose { border-left-color: var(--rose); }
+  .cs-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sand); margin-bottom: 0.4rem; }
+  .cs-value { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--ink); }
+
+  /* ── ORDERS PAGE ── */
+  .orders-kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .kanban-col { background: rgba(245,237,212,0.4); padding: 1rem; }
+  .kanban-header {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .kanban-count {
+    background: var(--gold);
+    color: var(--deep);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 99px;
+  }
+  .order-card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .order-card:hover { box-shadow: 0 4px 16px var(--shadow); }
+  .oc-id { font-size: 0.65rem; color: var(--sand); letter-spacing: 0.08em; }
+  .oc-name { font-size: 0.85rem; color: var(--ink); font-weight: 500; margin: 0.25rem 0; }
+  .oc-item { font-size: 0.75rem; color: var(--bark); }
+  .oc-price { font-size: 0.85rem; color: var(--gold); font-weight: 500; margin-top: 0.35rem; }
+
+  /* ── FINANCE ── */
+  .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .profit-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .profit-indicator.pos { color: var(--teal); }
+  .profit-indicator.neg { color: var(--rose); }
+
+  /* ── SETTINGS / USERS ── */
+  .user-card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: box-shadow 0.2s;
+  }
+  .user-card:hover { box-shadow: 0 4px 16px var(--shadow); }
+  .user-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    flex-shrink: 0;
+  }
+  .user-info .ui-name { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+  .user-info .ui-role { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sand); margin-top: 0.15rem; }
+  .user-info .ui-loc { font-size: 0.72rem; color: var(--bark); margin-top: 0.1rem; }
+  .user-perms { margin-left: auto; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+  .perm-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--sand);
+  }
+  .perm-tag.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--bark); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--sand);
+  }
+  .empty-state .es-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+  .empty-state p { font-size: 0.85rem; }
+
+  /* Access denied */
+  .access-denied {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    color: var(--sand);
+    text-align: center;
+  }
+  .access-denied .ad-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .access-denied h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--bark); margin-bottom: 0.5rem; }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--deep);
+    color: var(--gold-pale);
+    padding: 0.85rem 1.5rem;
+    font-size: 0.8rem;
+    border-left: 3px solid var(--gold);
+    z-index: 999;
+    animation: slideIn 0.3s ease;
+    display: none;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Responsive hints */
+  @media (max-width: 900px) {
+    .sidebar { width: 200px; }
+    .main { margin-left: 200px; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ LOGIN ═══════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-ornament">𝔈</div>
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="brand-e">𝐸</div>
+      <h1>Eloria</h1>
+      <p>Boutique &amp; Jewels — Management Portal</p>
+    </div>
+    <label class="login-label">Username</label>
+    <input class="login-input" id="l-user" type="text" placeholder="Enter username" autocomplete="username">
+    <label class="login-label">Password</label>
+    <input class="login-input" id="l-pass" type="password" placeholder="Enter password" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error">Invalid username or password.</div>
+    <div class="demo-users">
+      <p>Quick Login — click to fill</p>
+      <div class="demo-grid">
+        <div class="demo-chip" onclick="fillLogin('manoj','manoj123')">
+          <div class="dc-name">Manoj</div>
+          <div class="dc-role">Admin / Owner</div>
+        </div>
+        <div class="demo-chip" onclick="fillLogin('anju','anju123')">
+          <div class="dc-name">Anju</div>
+          <div class="dc-role">Co-Owner</div>
+        </div>
+        <div class="demo-chip" onclick="fillLogin('jijomon','jiji123')">
+          <div class="dc-name">Jijomon</div>
+          <div class="dc-role">Ireland Sales</div>
+        </div>
+        <div class="demo-chip" onclick="fillLogin('donna','donna123')">
+          <div class="dc-name">Donna</div>
+          <div class="dc-role">Registered Owner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ APP ═══════════════════════════════ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="s-brand">✦ Eloria</div>
+      <div class="s-sub">Boutique &amp; Jewels</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="su-name" id="sb-name">—</div>
+      <div class="su-role" id="sb-role">—</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <!-- filled by JS -->
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">⎋ Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page">
+      <div class="topbar">
+        <div class="topbar-title">Dashboard</div>
+        <div style="font-size:0.75rem;color:var(--sand)" id="dash-date"></div>
+      </div>
+      <div style="padding:2.5rem">
+        <div class="stat-grid" id="dash-stats"></div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-title">Recent Inventory Additions <span class="ct-label badge badge-gold">Last 5</span></div>
+            <div id="recent-inventory"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Consignment Status <span class="ct-label" style="font-size:0.65rem;color:var(--sand)">Ireland</span></div>
+            <div id="consign-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="page-inventory" class="page">
+      <div class="topbar">
+        <div class="topbar-title">Inventory</div>
+        <div class="topbar-actions">
+          <button class="btn-secondary" onclick="exportCSV()">↓ Export CSV</button>
+          <button class="btn-primary" id="btn-add-item" onclick="openItemModal()">+ Add Item</button>
+        </div>
+      </div>
+      <div style="padding:2.5rem">
+        <div id="low-stock-alert" class="alert-banner" style="display:none">
+          ⚠️ <span id="low-stock-msg"></span>
+        </div>
+        <div class="filters">
+          <input class="filter-input" id="inv-search" type="text" placeholder="🔍  Search by name, SKU…" oninput="renderInventory()">
+          <select class="filter-select" id="inv-cat" onchange="renderInventory()">
+            <option value="">All Categories</option>
+            <option>Jewellery</option>
+            <option>Dress Material</option>
+            <option>Sarees</option>
+            <option>Accessories</option>
+          </select>
+          <select class="filter-select" id="inv-status" onchange="renderInventory()">
+            <option value="">All Status</option>
+            <option>In Stock</option>
+            <option>Low Stock</option>
+            <option>Out of Stock</option>
+            <option>Consigned</option>
+          </select>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Sub-type</th>
+                <th>Cost (₹)</th>
+                <th>Price (€)</th>
+                <th>Stock</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONSIGNMENT -->
+    <div id="page-consignment" class="page">
+      <div class="topbar">
+        <div class="topbar-title">Consignment — Ireland (Jijomon)</div>
+        <div class="topbar-actions">
+          <button class="btn-primary" onclick="openConsignModal()">+ Send Consignment</button>
+        </div>
+      </div>
+      <div style="padding:2.5rem">
+        <div class="consign-summary" id="cs-summary"></div>
+        <div class="card">
+          <div class="card-title">Consignment Ledger</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Consign ID</th>
+                  <th>Date Sent</th>
+                  <th>Item</th>
+                  <th>SKU</th>
+                  <th>Qty Sent</th>
+                  <th>Qty Sold</th>
+                  <th>Qty Returned</th>
+                  <th>Sale Price (€)</th>
+                  <th>Revenue (€)</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="cs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="page-orders" class="page">
+      <div class="topbar">
+        <div class="topbar-title">Orders</div>
+        <div class="topbar-actions">
+          <button class="btn-primary" onclick="openOrderModal()">+ New Order</button>
+        </div>
+      </div>
+      <div style="padding:2.5rem">
+        <div class="orders-kanban" id="orders-kanban"></div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div id="page-finance" class="page">
+      <div class="topbar">
+        <div class="topbar-title">Finance & Profit</div>
+      </div>
+      <div style="padding:2.5rem" id="finance-content"></div>
+    </div>
+
+    <!-- USERS -->
+    <div id="page-users" class="page">
+      <div class="topbar">
+        <div class="topbar-title">User Management</div>
+      </div>
+      <div style="padding:2.5rem" id="users-content"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ MODALS ══ -->
+<!-- Item Modal -->
+<div class="modal-overlay" id="modal-item">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="item-modal-title">Add Inventory Item</h3>
+      <button class="modal-close" onclick="closeModal('modal-item')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">SKU</label>
+          <input class="form-control" id="f-sku" placeholder="e.g. JW-001" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Item Name</label>
+          <input class="form-control" id="f-name" placeholder="e.g. Kundan Necklace Set" type="text">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-control" id="f-cat" onchange="updateSubtype()">
+            <option>Jewellery</option>
+            <option>Dress Material</option>
+            <option>Sarees</option>
+            <option>Accessories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sub-type</label>
+          <select class="form-control" id="f-sub"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Cost Price (₹)</label>
+          <input class="form-control" id="f-cost" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Selling Price (€)</label>
+          <input class="form-control" id="f-price" type="number" placeholder="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stock Quantity</label>
+          <input class="form-control" id="f-stock" type="number" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Low Stock Alert (qty)</label>
+          <input class="form-control" id="f-low" type="number" placeholder="2">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <select class="form-control" id="f-loc">
+            <option>Kerala (Stock)</option>
+            <option>Ireland – Jijomon</option>
+            <option>In Transit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Supplier / Source</label>
+          <input class="form-control" id="f-supplier" placeholder="e.g. Saanu / Market" type="text">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <input class="form-control" id="f-notes" placeholder="Any remarks…" type="text">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-item')">Cancel</button>
+      <button class="btn-primary" onclick="saveItem()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- Consignment Modal -->
+<div class="modal-overlay" id="modal-consign">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Send Consignment to Jijomon</h3>
+      <button class="modal-close" onclick="closeModal('modal-consign')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Select Item (SKU)</label>
+          <select class="form-control" id="cs-item"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantity to Send</label>
+          <input class="form-control" id="cs-qty" type="number" placeholder="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date Sent</label>
+          <input class="form-control" id="cs-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expected Sale Price (€)</label>
+          <input class="form-control" id="cs-price" type="number" placeholder="0">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Shipping Notes</label>
+          <input class="form-control" id="cs-notes" placeholder="India Post EMS / courier details…" type="text">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-consign')">Cancel</button>
+      <button class="btn-primary" onclick="saveConsign()">Create Consignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Order Modal -->
+<div class="modal-overlay" id="modal-order">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>New Order</h3>
+      <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Customer Name</label>
+          <input class="form-control" id="o-name" type="text" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Customer Contact</label>
+          <input class="form-control" id="o-contact" type="text" placeholder="Phone / Email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Item (SKU / Name)</label>
+          <select class="form-control" id="o-item"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+          <input class="form-control" id="o-qty" type="number" placeholder="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sale Price (€)</label>
+          <input class="form-control" id="o-price" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Order Channel</label>
+          <select class="form-control" id="o-channel">
+            <option>WhatsApp</option>
+            <option>Instagram</option>
+            <option>Walk-in (Ireland)</option>
+            <option>Website</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Payment Status</label>
+          <select class="form-control" id="o-pay">
+            <option>Pending</option>
+            <option>Partial</option>
+            <option>Paid</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Delivery Location</label>
+          <input class="form-control" id="o-loc" type="text" placeholder="Limerick / Dublin…">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-order')">Cancel</button>
+      <button class="btn-primary" onclick="saveOrder()">Create Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+const USERS = {
+  manoj:  { name: 'Manoj Kumar', role: 'Admin / Owner',         pass: 'manoj123', loc: 'Kottayam, Kerala',  perms: ['dashboard','inventory','consignment','orders','finance','users'] },
+  anju:   { name: 'Anju',        role: 'Co-Owner',              pass: 'anju123',  loc: 'Ardagh, Limerick',  perms: ['dashboard','inventory','orders','finance'] },
+  jijomon:{ name: 'Jijomon',     role: 'Ireland Sales Partner', pass: 'jiji123',  loc: 'Limerick, Ireland', perms: ['dashboard','inventory','consignment','orders'] },
+  donna:  { name: 'Donna',       role: 'Registered Owner (IE)', pass: 'donna123', loc: 'Dublin, Ireland',   perms: ['dashboard','finance','users'] },
+};
+
+const NAV_ITEMS = [
+  { id: 'dashboard',    label: 'Dashboard',    icon: '◈', section: 'Overview' },
+  { id: 'inventory',   label: 'Inventory',    icon: '▦', section: 'Operations' },
+  { id: 'consignment', label: 'Consignment',  icon: '✈', section: 'Operations' },
+  { id: 'orders',      label: 'Orders',       icon: '◎', section: 'Operations' },
+  { id: 'finance',     label: 'Finance',      icon: '₹', section: 'Reports' },
+  { id: 'users',       label: 'Users',        icon: '◉', section: 'Settings' },
+];
+
+const SUBTYPES = {
+  'Jewellery':     ['Necklace Set', 'Earrings', 'Bangles', 'Ring', 'Anklet', 'Pendant', 'Bracelet', 'Maang Tikka', 'Full Set', 'Other'],
+  'Dress Material':['Cotton', 'Silk', 'Georgette', 'Chiffon', 'Linen', 'Chanderi', 'Churidar Set', 'Other'],
+  'Sarees':        ['Kasavu', 'Mural', 'Kanjivaram', 'Chiffon', 'Georgette', 'Cotton', 'Other'],
+  'Accessories':   ['Clutch', 'Potli Bag', 'Dupatta', 'Blouse Piece', 'Hair Accessory', 'Other'],
+};
+
+// In-memory data store
+let DB = {
+  inventory: [
+    { id:1, sku:'JW-001', name:'Kundan Necklace Set', cat:'Jewellery', sub:'Necklace Set', cost:3200, price:85, stock:3, low:2, loc:'Kerala (Stock)', supplier:'Market', notes:'Gold plated', status:'In Stock', added: '2025-12-10' },
+    { id:2, sku:'JW-002', name:'Temple Earrings (Gold)',cat:'Jewellery',sub:'Earrings',    cost:1200, price:32, stock:5, low:2, loc:'Kerala (Stock)', supplier:'Market', notes:'',          status:'In Stock', added: '2025-12-15' },
+    { id:3, sku:'JW-003', name:'Oxidised Bangles Set', cat:'Jewellery', sub:'Bangles',     cost:800,  price:22, stock:2, low:3, loc:'Ireland – Jijomon',supplier:'Market',notes:'6-piece set',status:'Low Stock',added:'2026-01-05'},
+    { id:4, sku:'DM-001', name:'Kerala Cotton Churidar',cat:'Dress Material',sub:'Cotton', cost:1800, price:48, stock:4, low:2, loc:'Kerala (Stock)', supplier:'Saanu', notes:'Mural print', status:'In Stock', added: '2026-01-20' },
+    { id:5, sku:'DM-002', name:'Chanderi Silk Suit',   cat:'Dress Material',sub:'Chanderi',cost:2800, price:72, stock:0, low:2, loc:'Kerala (Stock)', supplier:'Market', notes:'',          status:'Out of Stock',added:'2026-02-01'},
+    { id:6, sku:'JW-004', name:'Antique Choker Set',   cat:'Jewellery', sub:'Necklace Set',cost:2400, price:65, stock:2, low:2, loc:'Ireland – Jijomon',supplier:'Market',notes:'Rajasthani',status:'Consigned',added:'2026-02-10'},
+  ],
+  consignments: [
+    { id:'CS-001', date:'2026-01-15', itemId:6, itemName:'Antique Choker Set', sku:'JW-004', qtySent:2, qtySold:0, qtyRet:0, salePrice:65, status:'With Jijomon', notes:'India Post EMS' },
+    { id:'CS-002', date:'2026-02-20', itemId:3, itemName:'Oxidised Bangles Set',sku:'JW-003',qtySent:4, qtySold:2, qtyRet:0, salePrice:22, status:'Partially Sold', notes:'India Post EMS' },
+  ],
+  orders: [
+    { id:'ORD-001', customer:'Priya Murphy',  contact:'+353 87 111 2222', itemId:2, item:'Temple Earrings (Gold)', qty:1, price:32,  channel:'WhatsApp',  pay:'Paid',    loc:'Limerick', status:'Delivered', date:'2026-03-10' },
+    { id:'ORD-002', customer:'Meena O\'Brien',contact:'+353 86 333 4444', itemId:4, item:'Kerala Cotton Churidar',qty:1, price:48,  channel:'Instagram',  pay:'Pending', loc:'Dublin',   status:'Confirmed', date:'2026-03-28' },
+    { id:'ORD-003', customer:'Sindhu Varghese',contact:'+353 89 555 6666',itemId:1, item:'Kundan Necklace Set',  qty:1, price:85,  channel:'WhatsApp',  pay:'Partial', loc:'Cork',     status:'Processing',date:'2026-04-01' },
+    { id:'ORD-004', customer:'Anitha Nair',   contact:'+91 98765 43210', itemId:4, item:'Kerala Cotton Churidar',qty:2, price:96,  channel:'Other',      pay:'Paid',    loc:'Kerala',   status:'New',       date:'2026-04-10' },
+  ],
+  nextItemId: 7,
+  nextCsId: 3,
+  nextOrdId: 5,
+};
+
+let currentUser = null;
+let currentPage = 'dashboard';
+let editItemId = null;
+
+// ═══════════════════ LOGIN ═══════════════════
+function fillLogin(u, p) {
+  document.getElementById('l-user').value = u;
+  document.getElementById('l-pass').value = p;
+}
+function doLogin() {
+  const u = document.getElementById('l-user').value.trim().toLowerCase();
+  const p = document.getElementById('l-pass').value.trim();
+  const usr = USERS[u];
+  if (usr && usr.pass === p) {
+    currentUser = { username: u, ...usr };
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+});
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('l-user').value = '';
+  document.getElementById('l-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// ═══════════════════ APP INIT ═══════════════════
+function initApp() {
+  document.getElementById('sb-name').textContent = currentUser.name;
+  document.getElementById('sb-role').textContent = currentUser.role;
+  buildNav();
+  navigateTo('dashboard');
+  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-IE', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+function buildNav() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = '';
+  let lastSection = '';
+  NAV_ITEMS.forEach(item => {
+    if (!currentUser.perms.includes(item.id)) return;
+    if (item.section !== lastSection) {
+      nav.innerHTML += `<div class="nav-section">${item.section}</div>`;
+      lastSection = item.section;
+    }
+    nav.innerHTML += `
+      <div class="nav-item" id="nav-${item.id}" onclick="navigateTo('${item.id}')">
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label}</span>
+      </div>`;
+  });
+}
+
+function navigateTo(page) {
+  if (!currentUser.perms.includes(page)) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  currentPage = page;
+  const pg = document.getElementById(`page-${page}`);
+  if (pg) { pg.classList.add('active'); renderPage(page); }
+  const ni = document.getElementById(`nav-${page}`);
+  if (ni) ni.classList.add('active');
+}
+
+function renderPage(page) {
+  if (page === 'dashboard')    renderDashboard();
+  if (page === 'inventory')    renderInventory();
+  if (page === 'consignment')  renderConsignment();
+  if (page === 'orders')       renderOrders();
+  if (page === 'finance')      renderFinance();
+  if (page === 'users')        renderUsers();
+}
+
+// ═══════════════════ DASHBOARD ═══════════════════
+function renderDashboard() {
+  const totalItems = DB.inventory.length;
+  const totalStock = DB.inventory.reduce((a, i) => a + i.stock, 0);
+  const lowStock = DB.inventory.filter(i => i.stock > 0 && i.stock <= i.low).length;
+  const pendingOrders = DB.orders.filter(o => o.status !== 'Delivered').length;
+  const totalRevenue = DB.orders.filter(o => o.pay === 'Paid').reduce((a, o) => a + (o.price * o.qty), 0);
+
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total SKUs</div><div class="stat-value">${totalItems}</div><div class="stat-sub">Unique items</div><div class="stat-icon">▦</div></div>
+    <div class="stat-card"><div class="stat-label">Total Stock</div><div class="stat-value">${totalStock}</div><div class="stat-sub">Units across locations</div><div class="stat-icon">◈</div></div>
+    <div class="stat-card"><div class="stat-label">Active Orders</div><div class="stat-value">${pendingOrders}</div><div class="stat-sub">Not yet delivered</div><div class="stat-icon">◎</div></div>
+    <div class="stat-card"><div class="stat-label">Revenue (Paid)</div><div class="stat-value">€${totalRevenue}</div><div class="stat-sub">Confirmed payments</div><div class="stat-icon">₹</div></div>
+  `;
+
+  const recent = [...DB.inventory].sort((a,b) => b.id - a.id).slice(0,5);
+  document.getElementById('recent-inventory').innerHTML = `
+    <table><thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
+    <tbody>${recent.map(i => `<tr>
+      <td><code style="font-size:0.7rem;color:var(--sand)">${i.sku}</code></td>
+      <td>${i.name}</td>
+      <td>${i.cat}</td>
+      <td>€${i.price}</td>
+      <td><span class="badge ${stockBadge(i)}">${i.stock}</span></td>
+    </tr>`).join('')}</tbody></table>`;
+
+  const cs = DB.consignments;
+  const totalSent = cs.reduce((a,c) => a + c.qtySent, 0);
+  const totalSold = cs.reduce((a,c) => a + c.qtySold, 0);
+  const revIE = cs.reduce((a,c) => a + c.qtySold * c.salePrice, 0);
+  document.getElementById('consign-status').innerHTML = `
+    <div style="display:grid;gap:1rem">
+      <div style="display:flex;justify-content:space-between;padding:0.75rem;background:rgba(245,237,212,0.5);border:1px solid rgba(201,168,76,0.15)">
+        <span style="font-size:0.8rem;color:var(--sand)">Items Sent to Ireland</span>
+        <span style="font-weight:500;color:var(--ink)">${totalSent} units</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0.75rem;background:rgba(245,237,212,0.5);border:1px solid rgba(201,168,76,0.15)">
+        <span style="font-size:0.8rem;color:var(--sand)">Sold by Jijomon</span>
+        <span style="font-weight:500;color:var(--teal)">${totalSold} units</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0.75rem;background:rgba(245,237,212,0.5);border:1px solid rgba(201,168,76,0.15)">
+        <span style="font-size:0.8rem;color:var(--sand)">Ireland Revenue</span>
+        <span style="font-weight:500;color:var(--gold)">€${revIE}</span>
+      </div>
+      ${lowStock > 0 ? `<div class="alert-banner" style="margin:0">⚠️ ${lowStock} item(s) at low stock</div>` : ''}
+    </div>`;
+}
+
+// ═══════════════════ INVENTORY ═══════════════════
+function stockBadge(item) {
+  if (item.stock === 0) return 'badge-rose';
+  if (item.stock <= item.low) return 'badge-gold';
+  if (item.status === 'Consigned') return 'badge-blue';
+  return 'badge-green';
+}
+
+function renderInventory() {
+  const search = (document.getElementById('inv-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('inv-cat')?.value || '';
+  const status = document.getElementById('inv-status')?.value || '';
+  const canEdit = currentUser.perms.includes('inventory');
+
+  let items = DB.inventory.filter(i => {
+    const matchS = !search || i.name.toLowerCase().includes(search) || i.sku.toLowerCase().includes(search);
+    const matchC = !cat || i.cat === cat;
+    const matchSt = !status || i.status === status;
+    return matchS && matchC && matchSt;
+  });
+
+  const lowItems = DB.inventory.filter(i => i.stock > 0 && i.stock <= i.low);
+  const alertEl = document.getElementById('low-stock-alert');
+  const btn = document.getElementById('btn-add-item');
+  if (btn) btn.style.display = canEdit ? '' : 'none';
+
+  if (lowItems.length > 0) {
+    alertEl.style.display = 'flex';
+    document.getElementById('low-stock-msg').textContent = `Low stock: ${lowItems.map(i => i.name).join(', ')}`;
+  } else { alertEl.style.display = 'none'; }
+
+  const tbody = document.getElementById('inv-tbody');
+  tbody.innerHTML = items.length === 0
+    ? `<tr><td colspan="10" style="text-align:center;color:var(--sand);padding:2rem">No items found</td></tr>`
+    : items.map(i => `<tr>
+        <td><code style="font-size:0.72rem;color:var(--sand)">${i.sku}</code></td>
+        <td style="font-weight:400">${i.name}</td>
+        <td><span class="badge badge-grey">${i.cat}</span></td>
+        <td style="color:var(--sand);font-size:0.78rem">${i.sub}</td>
+        <td>₹${i.cost.toLocaleString()}</td>
+        <td style="color:var(--gold);font-weight:500">€${i.price}</td>
+        <td><span class="badge ${stockBadge(i)}">${i.stock}</span></td>
+        <td style="font-size:0.78rem;color:var(--bark)">${i.loc}</td>
+        <td><span class="badge ${i.status==='In Stock'?'badge-green':i.status==='Out of Stock'?'badge-rose':i.status==='Low Stock'?'badge-gold':'badge-blue'}">${i.status}</span></td>
+        <td style="white-space:nowrap">
+          ${canEdit ? `<button class="btn-secondary" style="padding:0.3rem 0.65rem;font-size:0.6rem" onclick="editItem(${i.id})">Edit</button>
+          <button class="btn-danger" onclick="deleteItem(${i.id})">Del</button>` : '—'}
+        </td>
+      </tr>`).join('');
+}
+
+function updateSubtype() {
+  const cat = document.getElementById('f-cat').value;
+  const sub = document.getElementById('f-sub');
+  sub.innerHTML = (SUBTYPES[cat] || []).map(s => `<option>${s}</option>`).join('');
+}
+
+function openItemModal(id = null) {
+  editItemId = id;
+  document.getElementById('item-modal-title').textContent = id ? 'Edit Item' : 'Add Inventory Item';
+  updateSubtype();
+  if (id) {
+    const item = DB.inventory.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('f-sku').value = item.sku;
+    document.getElementById('f-name').value = item.name;
+    document.getElementById('f-cat').value = item.cat;
+    updateSubtype();
+    document.getElementById('f-sub').value = item.sub;
+    document.getElementById('f-cost').value = item.cost;
+    document.getElementById('f-price').value = item.price;
+    document.getElementById('f-stock').value = item.stock;
+    document.getElementById('f-low').value = item.low;
+    document.getElementById('f-loc').value = item.loc;
+    document.getElementById('f-supplier').value = item.supplier;
+    document.getElementById('f-notes').value = item.notes;
+  } else {
+    ['f-sku','f-name','f-cost','f-price','f-stock','f-low','f-supplier','f-notes'].forEach(id => document.getElementById(id).value = '');
+  }
+  document.getElementById('modal-item').classList.add('open');
+}
+
+function editItem(id) { openItemModal(id); }
+
+function saveItem() {
+  const item = {
+    id: editItemId || DB.nextItemId++,
+    sku: document.getElementById('f-sku').value.trim(),
+    name: document.getElementById('f-name').value.trim(),
+    cat: document.getElementById('f-cat').value,
+    sub: document.getElementById('f-sub').value,
+    cost: parseFloat(document.getElementById('f-cost').value) || 0,
+    price: parseFloat(document.getElementById('f-price').value) || 0,
+    stock: parseInt(document.getElementById('f-stock').value) || 0,
+    low: parseInt(document.getElementById('f-low').value) || 2,
+    loc: document.getElementById('f-loc').value,
+    supplier: document.getElementById('f-supplier').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+    added: new Date().toISOString().split('T')[0],
+  };
+  item.status = item.stock === 0 ? 'Out of Stock' : item.stock <= item.low ? 'Low Stock' : 'In Stock';
+  if (!item.name || !item.sku) { showToast('Please fill in SKU and Name'); return; }
+
+  if (editItemId) {
+    const idx = DB.inventory.findIndex(i => i.id === editItemId);
+    if (idx > -1) DB.inventory[idx] = item;
+  } else {
+    DB.inventory.push(item);
+  }
+  closeModal('modal-item');
+  renderInventory();
+  renderDashboard();
+  showToast(editItemId ? 'Item updated ✓' : 'Item added ✓');
+}
+
+function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  DB.inventory = DB.inventory.filter(i => i.id !== id);
+  renderInventory();
+  renderDashboard();
+  showToast('Item deleted');
+}
+
+function exportCSV() {
+  const rows = [['SKU','Name','Category','Sub-type','Cost (INR)','Price (EUR)','Stock','Location','Status','Supplier','Notes']];
+  DB.inventory.forEach(i => rows.push([i.sku, i.name, i.cat, i.sub, i.cost, i.price, i.stock, i.loc, i.status, i.supplier, i.notes]));
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'eloria-inventory.csv';
+  a.click();
+}
+
+// ═══════════════════ CONSIGNMENT ═══════════════════
+function renderConsignment() {
+  const cs = DB.consignments;
+  const totalSent = cs.reduce((a,c) => a + c.qtySent, 0);
+  const totalSold = cs.reduce((a,c) => a + c.qtySold, 0);
+  const revenue = cs.reduce((a,c) => a + c.qtySold * c.salePrice, 0);
+
+  document.getElementById('cs-summary').innerHTML = `
+    <div class="cs-card"><div class="cs-label">Total Sent to Ireland</div><div class="cs-value">${totalSent}</div></div>
+    <div class="cs-card teal"><div class="cs-label">Units Sold by Jijomon</div><div class="cs-value">${totalSold}</div></div>
+    <div class="cs-card rose"><div class="cs-label">Total Revenue (Ireland)</div><div class="cs-value">€${revenue}</div></div>
+  `;
+
+  const canEdit = currentUser.perms.includes('consignment');
+  document.getElementById('cs-tbody').innerHTML = cs.map(c => `<tr>
+    <td><code style="font-size:0.72rem">${c.id}</code></td>
+    <td>${c.date}</td>
+    <td>${c.itemName}</td>
+    <td style="color:var(--sand)">${c.sku}</td>
+    <td>${c.qtySent}</td>
+    <td style="color:var(--teal)">${c.qtySold}</td>
+    <td>${c.qtyRet}</td>
+    <td>€${c.salePrice}</td>
+    <td style="color:var(--gold);font-weight:500">€${c.qtySold * c.salePrice}</td>
+    <td><span class="badge ${c.status==='Partially Sold'?'badge-gold':c.status==='Fully Sold'?'badge-green':'badge-blue'}">${c.status}</span></td>
+    <td>${canEdit ? `<button class="btn-secondary" style="padding:0.3rem 0.65rem;font-size:0.6rem" onclick="markSold(${cs.indexOf(c)})">Mark Sold</button>` : '—'}</td>
+  </tr>`).join('');
+}
+
+function openConsignModal() {
+  const sel = document.getElementById('cs-item');
+  sel.innerHTML = DB.inventory.map(i => `<option value="${i.id}">${i.sku} – ${i.name}</option>`).join('');
+  document.getElementById('cs-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal-consign').classList.add('open');
+}
+
+function saveConsign() {
+  const itemId = parseInt(document.getElementById('cs-item').value);
+  const item = DB.inventory.find(i => i.id === itemId);
+  const qty = parseInt(document.getElementById('cs-qty').value) || 1;
+  const c = {
+    id: `CS-00${DB.nextCsId++}`,
+    date: document.getElementById('cs-date').value,
+    itemId, itemName: item.name, sku: item.sku,
+    qtySent: qty, qtySold: 0, qtyRet: 0,
+    salePrice: parseFloat(document.getElementById('cs-price').value) || item.price,
+    status: 'With Jijomon',
+    notes: document.getElementById('cs-notes').value.trim(),
+  };
+  DB.consignments.push(c);
+  // update inventory
+  const inv = DB.inventory.find(i => i.id === itemId);
+  if (inv) { inv.stock = Math.max(0, inv.stock - qty); inv.status = 'Consigned'; }
+  closeModal('modal-consign');
+  renderConsignment();
+  showToast('Consignment created ✓');
+}
+
+function markSold(idx) {
+  const c = DB.consignments[idx];
+  const remaining = c.qtySent - c.qtySold - c.qtyRet;
+  if (remaining <= 0) { showToast('No remaining units'); return; }
+  c.qtySold += 1;
+  if (c.qtySold >= c.qtySent) c.status = 'Fully Sold';
+  else c.status = 'Partially Sold';
+  renderConsignment();
+  showToast('Sale recorded ✓');
+}
+
+// ═══════════════════ ORDERS ═══════════════════
+const ORDER_COLS = ['New','Confirmed','Processing','Delivered'];
+
+function renderOrders() {
+  const kanban = document.getElementById('orders-kanban');
+  kanban.innerHTML = ORDER_COLS.map(col => {
+    const colOrders = DB.orders.filter(o => o.status === col);
+    return `<div class="kanban-col">
+      <div class="kanban-header">${col} <span class="kanban-count">${colOrders.length}</span></div>
+      ${colOrders.length === 0 ? '<div style="color:var(--sand);font-size:0.75rem;text-align:center;padding:1rem">Empty</div>' : ''}
+      ${colOrders.map(o => `<div class="order-card" onclick="advanceOrder('${o.id}')">
+        <div class="oc-id">${o.id} · ${o.date}</div>
+        <div class="oc-name">${o.customer}</div>
+        <div class="oc-item">${o.item}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem">
+          <span class="oc-price">€${o.price * o.qty}</span>
+          <span class="badge ${o.pay==='Paid'?'badge-green':o.pay==='Partial'?'badge-gold':'badge-grey'}">${o.pay}</span>
+        </div>
+        <div style="font-size:0.65rem;color:var(--sand);margin-top:0.25rem">${o.channel} · ${o.loc}</div>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function advanceOrder(id) {
+  const ord = DB.orders.find(o => o.id === id);
+  if (!ord) return;
+  const idx = ORDER_COLS.indexOf(ord.status);
+  if (idx < ORDER_COLS.length - 1) {
+    ord.status = ORDER_COLS[idx + 1];
+    renderOrders();
+    showToast(`Order ${id} → ${ord.status}`);
+  }
+}
+
+function openOrderModal() {
+  const sel = document.getElementById('o-item');
+  sel.innerHTML = DB.inventory.map(i => `<option value="${i.id}">${i.sku} – ${i.name}</option>`).join('');
+  document.getElementById('modal-order').classList.add('open');
+}
+
+function saveOrder() {
+  const itemId = parseInt(document.getElementById('o-item').value);
+  const item = DB.inventory.find(i => i.id === itemId);
+  const ord = {
+    id: `ORD-00${DB.nextOrdId++}`,
+    customer: document.getElementById('o-name').value.trim(),
+    contact: document.getElementById('o-contact').value.trim(),
+    itemId, item: item.name,
+    qty: parseInt(document.getElementById('o-qty').value) || 1,
+    price: parseFloat(document.getElementById('o-price').value) || item.price,
+    channel: document.getElementById('o-channel').value,
+    pay: document.getElementById('o-pay').value,
+    loc: document.getElementById('o-loc').value.trim(),
+    status: 'New',
+    date: new Date().toISOString().split('T')[0],
+  };
+  if (!ord.customer) { showToast('Please enter customer name'); return; }
+  DB.orders.push(ord);
+  closeModal('modal-order');
+  renderOrders();
+  showToast('Order created ✓');
+}
+
+// ═══════════════════ FINANCE ═══════════════════
+function renderFinance() {
+  const totalCost = DB.inventory.reduce((a,i) => a + i.cost * i.stock, 0);
+  const paidOrders = DB.orders.filter(o => o.pay === 'Paid');
+  const revenue = paidOrders.reduce((a,o) => a + o.price * o.qty, 0);
+  const csRevenue = DB.consignments.reduce((a,c) => a + c.qtySold * c.salePrice, 0);
+  const totalRevenue = revenue + csRevenue;
+  const profit = totalRevenue - (paidOrders.reduce((a,o) => {
+    const inv = DB.inventory.find(i => i.id === o.itemId);
+    return a + (inv ? inv.cost * o.qty / 85 : 0); // rough INR→EUR
+  }, 0));
+
+  document.getElementById('finance-content').innerHTML = `
+    <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:2rem">
+      <div class="stat-card"><div class="stat-label">Stock Value (Cost)</div><div class="stat-value">₹${totalCost.toLocaleString()}</div><div class="stat-sub">Current inventory value</div></div>
+      <div class="stat-card"><div class="stat-label">Direct Sales</div><div class="stat-value">€${revenue}</div><div class="stat-sub">Paid orders</div></div>
+      <div class="stat-card"><div class="stat-label">Ireland Sales</div><div class="stat-value">€${csRevenue}</div><div class="stat-sub">Via Jijomon consignment</div></div>
+      <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value">€${totalRevenue}</div><div class="stat-sub">Combined</div></div>
+    </div>
+    <div class="finance-grid">
+      <div class="card">
+        <div class="card-title">Sales by Category</div>
+        ${['Jewellery','Dress Material','Sarees','Accessories'].map(cat => {
+          const items = DB.orders.filter(o => {
+            const inv = DB.inventory.find(i => i.id === o.itemId);
+            return inv && inv.cat === cat;
+          });
+          const rev = items.reduce((a,o) => a + o.price * o.qty, 0);
+          const pct = totalRevenue > 0 ? Math.round(rev / totalRevenue * 100) : 0;
+          return `<div style="margin-bottom:1rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+              <span style="font-size:0.8rem">${cat}</span>
+              <span style="font-size:0.8rem;font-weight:500;color:var(--gold)">€${rev}</span>
+            </div>
+            <div style="background:rgba(201,168,76,0.1);height:4px;border-radius:2px">
+              <div style="background:var(--gold);height:4px;width:${pct}%;border-radius:2px;transition:width 0.5s"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="card">
+        <div class="card-title">Payment Summary</div>
+        ${[['Paid','badge-green'],['Partial','badge-gold'],['Pending','badge-grey']].map(([status, cls]) => {
+          const cnt = DB.orders.filter(o => o.pay === status).length;
+          const amt = DB.orders.filter(o => o.pay === status).reduce((a,o) => a + o.price*o.qty, 0);
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid rgba(201,168,76,0.08)">
+            <span class="badge ${cls}">${status}</span>
+            <span style="font-size:0.82rem">${cnt} orders</span>
+            <span style="font-size:0.85rem;font-weight:500;color:var(--ink)">€${amt}</span>
+          </div>`;
+        }).join('')}
+        <div style="margin-top:1.25rem;padding:1rem;background:rgba(245,237,212,0.5);border:1px solid rgba(201,168,76,0.15)">
+          <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sand);margin-bottom:0.4rem">Estimated Gross Profit</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--teal)">€${Math.round(profit)}</div>
+          <div style="font-size:0.7rem;color:var(--sand);margin-top:0.25rem">After cost conversion (est. ₹85/€)</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════ USERS ═══════════════════
+function renderUsers() {
+  const isAdmin = currentUser.username === 'manoj' || currentUser.username === 'donna';
+  const permsMap = {
+    dashboard: 'Dashboard', inventory: 'Inventory', consignment: 'Consignment',
+    orders: 'Orders', finance: 'Finance', users: 'Users'
+  };
+  document.getElementById('users-content').innerHTML = Object.entries(USERS).map(([key, usr]) => `
+    <div class="user-card">
+      <div class="user-avatar">${usr.name[0]}</div>
+      <div class="user-info">
+        <div class="ui-name">${usr.name}</div>
+        <div class="ui-role">${usr.role}</div>
+        <div class="ui-loc">📍 ${usr.loc}</div>
+      </div>
+      <div class="user-perms">
+        ${Object.entries(permsMap).map(([id, label]) =>
+          `<span class="perm-tag ${usr.perms.includes(id) ? 'active' : ''}">${label}</span>`
+        ).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════ UTILS ═══════════════════
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
